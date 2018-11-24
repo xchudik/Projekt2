@@ -92,8 +92,15 @@ void f_P(AUTOPREDAJCA **p_prv){
         }
         else
             while(p_akt != NULL){
-                
-                
+                if(i == k || p_akt->dalsi == NULL){
+                    p_novy = (AUTOPREDAJCA*) malloc(sizeof(AUTOPREDAJCA));
+                    p_novy->dalsi = p_akt->dalsi;
+                    p_akt->dalsi = p_novy;
+                    p_akt = p_novy;
+                    break;
+                }
+                else
+                    p_akt = p_akt->dalsi;
                 i++;
             }
     scanf(" %[^\n]s",p_akt->kategoria);
