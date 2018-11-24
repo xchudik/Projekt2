@@ -7,9 +7,35 @@
 //
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    printf("Hello, World!\n");
-    return 0;
+
+int main(){
+    char c;
+    scanf("%c",&c);
+    while(1){
+        if(c == 'n'){
+            
+        }
+        else if(c == 'v'){
+            
+        }
+        else if(c == 'p'){
+            
+        }
+        else if(c == 'z'){
+            
+        }
+        else if(c == 'h'){
+            
+        }
+        else if(c == 'a'){
+            
+        }
+        else if(c == 'k'){
+            break;
+        }
+        return 0;
+    }
 }
