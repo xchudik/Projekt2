@@ -22,13 +22,11 @@ typedef struct autopredajca{
 
 int f_N(AUTOPREDAJCA **n_prv,AUTOPREDAJCA **n_akt,FILE **subor){
     int pzaznam = 0,i=0;
-    char *pomocna;
-    pomocna = (char*) malloc(sizeof(char));
-    *n_prv = (AUTOPREDAJCA*) malloc(sizeof(AUTOPREDAJCA));
+    char pomocna[3];
     *subor = fopen("auta.txt","r");
     while(!feof(*subor)){
-        fgets(pomocna,200,*subor);
-        if(*pomocna == '$')
+        fgets(pomocna,2,*subor);
+        if(pomocna[0] == '$')
             pzaznam++;
     }
     if(*subor == NULL || pzaznam == 0)
@@ -36,41 +34,58 @@ int f_N(AUTOPREDAJCA **n_prv,AUTOPREDAJCA **n_akt,FILE **subor){
     else
         printf("Nacitalo sa %d zaznamov\n",pzaznam);
     rewind(*subor);
-    fscanf(*subor,"%s",pomocna);
-    fscanf(*subor,"%s",(*n_prv)->kategoria);
+    (*n_prv) = (AUTOPREDAJCA*) malloc(sizeof(AUTOPREDAJCA));
+    fgets(pomocna,2,*subor);
+    fscanf(*subor," %[^\n]s",(*n_prv)->kategoria);
+    fscanf(*subor," %[^\n]s",(*n_prv)->znacka);
+    fscanf(*subor," %[^\n]s",(*n_prv)->predajca);
+    fscanf(*subor," %d",&(*n_prv)->cena);
+    fscanf(*subor," %d",&(*n_prv)->rok_vyroby);
+    fscanf(*subor," %[^\n]s",(*n_prv)->stav_vozidla);
+    
     *n_akt = *n_prv;
-    for(i=0;i<pzaznam;i++){
+    for(i=0;i<pzaznam-1;i++){
         (*n_akt)->dalsi = (AUTOPREDAJCA*) malloc(sizeof(AUTOPREDAJCA));
+        if((*n_akt)->dalsi == NULL)
+            printf("Malo pamate \n");
         *n_akt = (*n_akt)->dalsi;
-        fscanf(*subor,"%s",(*n_akt)->znacka);
-        *n_akt = (*n_akt)->dalsi;
-        fscanf(*subor,"%s",(*n_akt)->predajca);
-        *n_akt = (*n_akt)->dalsi;
-        fscanf(*subor,"%d",&(*n_akt)->cena);
-        *n_akt = (*n_akt)->dalsi;
-        fscanf(*subor,"%d",&(*n_akt)->rok_vyroby);
-        *n_akt = (*n_akt)->dalsi;
-        fscanf(*subor,"%s",(*n_akt)->stav_vozidla);
-        *n_akt = (*n_akt)->dalsi;
-        fscanf(*subor,"%s",pomocna);
-        *n_akt = (*n_akt)->dalsi;
-        fscanf(*subor,"%s",(*n_akt)->kategoria);
+        fgets(pomocna,2,*subor);
+        fgets(pomocna,2,*subor);
+        fscanf(*subor," %[^\n]s",(*n_akt)->kategoria);
+        fscanf(*subor," %[^\n]s",(*n_akt)->znacka);
+        fscanf(*subor," %[^\n]s",(*n_akt)->predajca);
+        fscanf(*subor," %d",&(*n_akt)->cena);
+        fscanf(*subor," %d",&(*n_akt)->rok_vyroby);
+        fscanf(*subor," %[^\n]s",(*n_akt)->stav_vozidla);
     }
+    (*n_akt)->dalsi = NULL;
     return pzaznam;
 }
-
+void f_V(AUTOPREDAJCA *v_prv,AUTOPREDAJCA *v_akt,int pocetz){
+    v_akt = v_prv;
+    while(v_akt != NULL){
+        printf("kategoria: %s \n",v_akt->kategoria);
+        printf("znacka: %s \n",v_akt->znacka);
+        printf("predajca: %s \n",v_akt->predajca);
+        printf("cena: %d \n",v_akt->cena);
+        printf("rok_vyroby: %d \n",v_akt->rok_vyroby);
+        printf("stav_vozidla: %s \n",v_akt->stav_vozidla);
+        printf("\n");
+        v_akt = v_akt->dalsi;
+    }
+}
 int main(){
     char c;
     int pocetz = 0;
     AUTOPREDAJCA *m_prv=NULL,*m_akt=NULL;
     FILE *subor;
-    scanf("%c",&c);
     while(1){
+        scanf("%c",&c);
         if(c == 'n'){
             pocetz = f_N(&m_prv,&m_akt,&subor);
         }
         else if(c == 'v'){
-            
+            f_V(m_prv,m_akt,pocetz);
         }
         else if(c == 'p'){
             
@@ -87,6 +102,6 @@ int main(){
         else if(c == 'k'){
             break;
         }
-        return 0;
     }
+    return 0;
 }
