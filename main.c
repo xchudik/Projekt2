@@ -110,8 +110,31 @@ void f_P(AUTOPREDAJCA **p_prv){
     scanf(" %d",&p_akt->rok_vyroby);
     scanf(" %[^\n]s",p_akt->stav_vozidla);
 }
+
+void f_H(AUTOPREDAJCA *h_prv){
+    char zauta[50];
+    int ponuka,i=1;
+    AUTOPREDAJCA *akt;
+    akt = h_prv;
+    scanf(" %s",zauta);
+    scanf("%d",&ponuka);
+    while(akt != NULL){
+        if(!strcasecmp(akt->znacka,zauta) && akt->cena <= ponuka){
+            printf("%d. \n",i);
+            printf("kategoria: %s \n",akt->kategoria);
+            printf("znacka: %s \n",akt->znacka);
+            printf("predajca: %s \n",akt->predajca);
+            printf("cena: %d \n",akt->cena);
+            printf("rok_vyroby: %d \n",akt->rok_vyroby);
+            printf("stav_vozidla: %s \n",akt->stav_vozidla);
+            i++;
+        }
+        akt = akt->dalsi;
+    }
+}
+
 void f_A(AUTOPREDAJCA **a_prv){
-    char zauta[51];
+    char zauta[50];
     int rok,i=0;
     AUTOPREDAJCA *akt;
     akt=(*a_prv);
@@ -127,7 +150,14 @@ void f_A(AUTOPREDAJCA **a_prv){
     }
     printf("Aktualizovalo sa %d zaznamov \n",i);
 }
-
+void f_K(AUTOPREDAJCA **k_prv){
+    AUTOPREDAJCA *akt = NULL;
+    while(akt != NULL){
+        akt = (*k_prv);
+        (*k_prv)=(*k_prv)->dalsi;
+        free(akt);
+    }
+}
 
 int main(){
     char c;
@@ -148,12 +178,13 @@ int main(){
             
         }
         else if(c == 'h'){
-            
+            f_H(m_prv);
         }
         else if(c == 'a'){
             f_A(&m_prv);
         }
         else if(c == 'k'){
+            f_K(&m_prv);
             break;
         }
     }
