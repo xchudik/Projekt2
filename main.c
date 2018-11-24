@@ -110,6 +110,25 @@ void f_P(AUTOPREDAJCA **p_prv){
     scanf(" %d",&p_akt->rok_vyroby);
     scanf(" %[^\n]s",p_akt->stav_vozidla);
 }
+void f_A(AUTOPREDAJCA **a_prv){
+    char zauta[51];
+    int rok,i=0;
+    AUTOPREDAJCA *akt;
+    akt=(*a_prv);
+    scanf(" %s",zauta);
+    scanf("%d",&rok);
+    while(akt != NULL){
+        if(!strcmp(akt->znacka,zauta) && akt->rok_vyroby == rok){
+            if((akt->cena = akt->cena-100)<=0)
+                akt->cena = 0;
+            i++;
+        }
+        akt = akt->dalsi;
+    }
+    printf("Aktualizovalo sa %d zaznamov \n",i);
+}
+
+
 int main(){
     char c;
     int pocetz = 0;
@@ -132,7 +151,7 @@ int main(){
             
         }
         else if(c == 'a'){
-            
+            f_A(&m_prv);
         }
         else if(c == 'k'){
             break;
