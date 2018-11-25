@@ -20,9 +20,9 @@ typedef struct autopredajca{
     struct autopredajca *dalsi;
 }AUTOPREDAJCA;
 
-int f_N(AUTOPREDAJCA **n_prv){
+void f_N(AUTOPREDAJCA **n_prv){
     int pzaznam = 0,i=0;
-    AUTOPREDAJCA *n_akt;
+    AUTOPREDAJCA *n_akt = NULL;
     char pomocna[3];
     FILE *subor;
     subor = fopen("auta.txt","r");
@@ -31,13 +31,22 @@ int f_N(AUTOPREDAJCA **n_prv){
         if(pomocna[0] == '$')
             pzaznam++;
     }
-    if(pzaznam == 0)
+    fclose(subor);
+    if((subor = fopen("auta.txt","r")) == NULL && (*n_prv) == NULL)
         printf("Zaznamy neboli nacitane\n");
     else
         printf("Nacitalo sa %d zaznamov\n",pzaznam);
     rewind(subor);
+    if((*n_prv) != NULL){
+        while(n_akt != NULL){
+            n_akt = (*n_prv);
+            (*n_prv)=(*n_prv)->dalsi;
+            free(n_akt);
+        }
+        (*n_prv) = NULL;
+    }
     (*n_prv) = (AUTOPREDAJCA*) malloc(sizeof(AUTOPREDAJCA));
-    fgets(pomocna,2,subor);
+    fgets(pomocna,2,subor); //Nacitanie znaku '$' do pomocnej premennej
     fscanf(subor," %[^\n]s",(*n_prv)->kategoria);
     fscanf(subor," %[^\n]s",(*n_prv)->znacka);
     fscanf(subor," %[^\n]s",(*n_prv)->predajca);
@@ -60,8 +69,7 @@ int f_N(AUTOPREDAJCA **n_prv){
         fscanf(subor," %d",&n_akt->rok_vyroby);
         fscanf(subor," %[^\n]s",n_akt->stav_vozidla);
     }
-    n_akt->dalsi = NULL;
-    return pzaznam;
+    n_akt->dalsi = NULL; //Koniec spajaneho zaznamu
 }
 void f_V(AUTOPREDAJCA *v_prv){
     int i=1;
@@ -85,13 +93,13 @@ void f_P(AUTOPREDAJCA **p_prv){
     p_novy = (AUTOPREDAJCA*) malloc(sizeof(AUTOPREDAJCA));
     p_akt = (*p_prv);
     scanf("%d",&k);
-        if(k==1){
+        if(k==1){   //Pripadnie noveho ako prvy
             p_novy->dalsi=(*p_prv);
             (*p_prv) = p_novy;
             p_akt = (*p_prv);
         }
         else
-            while(p_akt != NULL){
+            while(p_akt != NULL){      //Pridavanie noveho iny ako prvy
                 if(i == k || p_akt->dalsi == NULL){
                     p_novy = (AUTOPREDAJCA*) malloc(sizeof(AUTOPREDAJCA));
                     p_novy->dalsi = p_akt->dalsi;
@@ -109,6 +117,38 @@ void f_P(AUTOPREDAJCA **p_prv){
     scanf(" %d",&p_akt->cena);
     scanf(" %d",&p_akt->rok_vyroby);
     scanf(" %[^\n]s",p_akt->stav_vozidla);
+}
+
+void f_Z(AUTOPREDAJCA **z_prv){
+    int pocet = 0;
+    AUTOPREDAJCA *akt,*temp;
+    akt = (*z_prv);
+    temp = (*z_prv);
+    char zauta[50];
+    scanf(" %s",zauta);
+    while(akt != NULL){
+        if(akt->dalsi != NULL && strcasestr(akt->znacka,zauta) && akt == (*z_prv)){ //Zmazanie pre prvy
+            (*z_prv) = (*z_prv)->dalsi;
+            free(akt);
+            akt = (*z_prv);
+            pocet++;
+            continue;
+        }
+        if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){ //Zmazavanie okrem prveho a posledneho
+            temp = akt->dalsi;
+            akt->dalsi = akt->dalsi->dalsi;
+            free(temp);
+            pocet++;
+            continue;
+        }
+        if(akt->dalsi == NULL && strcasestr(akt->znacka,zauta)){    //Zmazanie posledneho
+            free(akt);
+            (*z_prv) = NULL;
+            pocet++;
+        }
+        akt = akt->dalsi;
+    }
+    printf("Vymazalo sa %d zaznamov \n",pocet);
 }
 
 void f_H(AUTOPREDAJCA *h_prv){
@@ -131,6 +171,8 @@ void f_H(AUTOPREDAJCA *h_prv){
         }
         akt = akt->dalsi;
     }
+    if(i == 1)
+        printf("V ponuke nie su pozadovane auta \n");
 }
 
 void f_A(AUTOPREDAJCA **a_prv){
@@ -141,7 +183,7 @@ void f_A(AUTOPREDAJCA **a_prv){
     scanf(" %s",zauta);
     scanf("%d",&rok);
     while(akt != NULL){
-        if(!strcmp(akt->znacka,zauta) && akt->rok_vyroby == rok){
+        if(!strcasecmp(akt->znacka,zauta) && akt->rok_vyroby == rok){
             if((akt->cena = akt->cena-100)<=0)
                 akt->cena = 0;
             i++;
@@ -149,6 +191,7 @@ void f_A(AUTOPREDAJCA **a_prv){
         akt = akt->dalsi;
     }
     printf("Aktualizovalo sa %d zaznamov \n",i);
+    
 }
 void f_K(AUTOPREDAJCA **k_prv){
     AUTOPREDAJCA *akt = NULL;
@@ -157,34 +200,34 @@ void f_K(AUTOPREDAJCA **k_prv){
         (*k_prv)=(*k_prv)->dalsi;
         free(akt);
     }
+    (*k_prv) = NULL;
 }
 
 int main(){
     char c;
-    int pocetz = 0;
-    AUTOPREDAJCA *m_prv=NULL;
+    AUTOPREDAJCA *m_prv=NULL;   //Smernik na zaciatok spajaneho zoznamu
     while(1){
         scanf("%c",&c);
         if(c == 'n'){
-            pocetz = f_N(&m_prv);
+            f_N(&m_prv);    //Funkcia pre nacitanie prvkov z textoveho suboru do spajaneho zoznamu
         }
         else if(c == 'v'){
-            f_V(m_prv);
+            f_V(m_prv);     //Funkcia pre vypis spajaneho zoznamu
         }
         else if(c == 'p'){
-            f_P(&m_prv);
+            f_P(&m_prv);    //Funkcia pre pridanie zaznamu do spajaheno zoznamu
         }
         else if(c == 'z'){
-            
+            f_Z(&m_prv);    //Funkcia pre zmazavanie zaznamov zo spajaneho zoznamu podla znacky
         }
         else if(c == 'h'){
-            f_H(m_prv);
+            f_H(m_prv);     //Funkcia pre vyhladanie ponuky podla znacky a ceny
         }
         else if(c == 'a'){
-            f_A(&m_prv);
+            f_A(&m_prv);    //Funkcia pre znizenie ceny o 100 pre zadanu znacku
         }
         else if(c == 'k'){
-            f_K(&m_prv);
+            f_K(&m_prv);    //Funckia pre uvolnenie spajaneho zoznamu a zavretie programu
             break;
         }
     }
