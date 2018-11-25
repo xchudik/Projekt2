@@ -42,7 +42,7 @@ void f_N(AUTOBAZAR **n_prv){
     }
     (*n_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
     fgets(pomocna,2,subor);    //Nacitanie znaku '$' do pomocnej premennej
-    fscanf(subor," %[^\n]s",(*n_prv)->kategoria);
+    fscanf(subor," %[^\n]s",(*n_prv)->kategoria);   //Nacitanie prveho zaznamu
     fscanf(subor," %[^\n]s",(*n_prv)->znacka);
     fscanf(subor," %[^\n]s",(*n_prv)->predajca);
     fscanf(subor," %d",&(*n_prv)->cena);
@@ -50,7 +50,7 @@ void f_N(AUTOBAZAR **n_prv){
     fscanf(subor," %[^\n]s",(*n_prv)->stav_vozidla);
     
     n_akt = (*n_prv);
-    for(i=0;i<pzaznam-1;i++){
+    for(i=0;i<pzaznam-1;i++){   //Cyklus pre nacitanie dalsich zaznamov
         n_akt->dalsi = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         n_akt = n_akt->dalsi;
         fgets(pomocna,2,subor);     //Nacitanie znaku '$' do pomocnej premennej
@@ -64,18 +64,18 @@ void f_N(AUTOBAZAR **n_prv){
     }
     n_akt->dalsi = NULL; //Ukoncenie spajaneho zaznamu
     
-    if((subor = fopen("auta.txt","r")) == NULL || (*n_prv) == NULL)
+    if((subor = fopen("auta.txt","r")) == NULL || (*n_prv) == NULL)     //Podmienky pre ak nebol otvoreny subot alebo subor nema ziadne zaznamy
         printf("Zaznamy neboli nacitane\n");
     else
         printf("Nacitalo sa %d zaznamov\n",pzaznam);
     fclose(subor);
 }
 void f_V(AUTOBAZAR *v_prv){
-    int i=1;
+    int poradie=1;
     AUTOBAZAR *v_akt;
     v_akt = v_prv;
     while(v_akt != NULL){
-        printf("%d. \n",i);
+        printf("%d. \n",poradie);
         printf("kategoria: %s \n",v_akt->kategoria);
         printf("znacka: %s \n",v_akt->znacka);
         printf("predajca: %s \n",v_akt->predajca);
@@ -83,11 +83,11 @@ void f_V(AUTOBAZAR *v_prv){
         printf("rok_vyroby: %d \n",v_akt->rok_vyroby);
         printf("stav_vozidla: %s \n",v_akt->stav_vozidla);
         v_akt = v_akt->dalsi;
-        i++;
+        poradie++;
     }
 }
 void f_P(AUTOBAZAR **p_prv){
-    int k,i=1;
+    int k,posun=1;
     AUTOBAZAR *p_novy,*p_akt;
     p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
     p_akt = (*p_prv);
@@ -99,7 +99,7 @@ void f_P(AUTOBAZAR **p_prv){
         }
         else
             while(p_akt != NULL){      //Pridavanie noveho zaznamu iny ako prvy
-                if(i == k || p_akt->dalsi == NULL){
+                if(posun == k || p_akt->dalsi == NULL){
                     p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
                     p_novy->dalsi = p_akt->dalsi;
                     p_akt->dalsi = p_novy;
@@ -108,7 +108,7 @@ void f_P(AUTOBAZAR **p_prv){
                 }
                 else
                     p_akt = p_akt->dalsi;
-                i++;
+                posun++;
             }
     scanf(" %[^\n]s",p_akt->kategoria);
     scanf(" %[^\n]s",p_akt->znacka);
@@ -122,7 +122,6 @@ void f_Z(AUTOBAZAR **z_prv){
     int pocet = 0;
     AUTOBAZAR *akt,*temp;
     akt = (*z_prv);
-    temp = (*z_prv);
     char zauta[50];
     scanf(" %s",zauta);
     while(akt != NULL){
@@ -133,7 +132,7 @@ void f_Z(AUTOBAZAR **z_prv){
             pocet++;
             continue;
         }
-        if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){ //Podmienka pre zmazavanie zaznamov (okrem prveho a posledneho)
+        if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){ //Podmienka pre zmazavanie zaznamov (okrem prveho a posledneho zaznamu)
             temp = akt->dalsi;
             akt->dalsi = akt->dalsi->dalsi;
             free(temp);
@@ -176,7 +175,7 @@ void f_H(AUTOBAZAR *h_prv){
 
 void f_A(AUTOBAZAR **a_prv){
     char zauta[50];
-    int rok,i=0;
+    int rok,pocet=0;
     AUTOBAZAR *akt;
     akt=(*a_prv);
     scanf(" %s",zauta);
@@ -185,11 +184,11 @@ void f_A(AUTOBAZAR **a_prv){
         if(!strcasecmp(akt->znacka,zauta) && akt->rok_vyroby == rok){
             if((akt->cena = akt->cena-100)<=0)
                 akt->cena = 0;
-            i++;
+            pocet++;
         }
         akt = akt->dalsi;
     }
-    printf("Aktualizovalo sa %d zaznamov \n",i);
+    printf("Aktualizovalo sa %d zaznamov \n",pocet);
     
 }
 void f_K(AUTOBAZAR **k_prv){
