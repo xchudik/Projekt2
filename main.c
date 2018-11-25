@@ -20,11 +20,15 @@ typedef struct autobazar{
     struct autobazar *dalsi;
 }AUTOBAZAR;
 
-void f_N(AUTOBAZAR **n_prv){
+int f_N(AUTOBAZAR **n_prv){
     int pzaznam = 0,i=0;
     AUTOBAZAR *n_akt = NULL;
     char pomocna[2];
     FILE *subor;
+    if((subor = fopen("auta.txt","r")) == NULL){
+        printf("Zaznamy neboli nacitane\n");
+        return 0;
+    }
     subor = fopen("auta.txt","r");
     while(!feof(subor)){
         fgets(pomocna,2,subor);
@@ -63,12 +67,11 @@ void f_N(AUTOBAZAR **n_prv){
         fscanf(subor," %[^\n]s",n_akt->stav_vozidla);
     }
     n_akt->dalsi = NULL; //Ukoncenie spajaneho zaznamu
-    
-    if((subor = fopen("auta.txt","r")) == NULL || (*n_prv) == NULL)     //Podmienky pre ak nebol otvoreny subot alebo subor nema ziadne zaznamy
+    if((*n_prv) == NULL)
         printf("Zaznamy neboli nacitane\n");
-    else
-        printf("Nacitalo sa %d zaznamov\n",pzaznam);
+    printf("Nacitalo sa %d zaznamov\n",pzaznam);
     fclose(subor);
+    return 1;
 }
 void f_V(AUTOBAZAR *v_prv){
     int poradie=1;
@@ -132,14 +135,14 @@ void f_Z(AUTOBAZAR **z_prv){
             pocet++;
             continue;
         }
-        if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){ //Podmienka pre zmazavanie zaznamov (okrem prveho a posledneho zaznamu)
+        else if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){ //Podmienka pre zmazavanie zaznamov (okrem prveho a posledneho zaznamu)
             temp = akt->dalsi;
             akt->dalsi = akt->dalsi->dalsi;
             free(temp);
             pocet++;
             continue;
         }
-        if(akt->dalsi == NULL && strcasestr(akt->znacka,zauta)){    //Podmienka pre zmazanie posledneho zaznamu spajaneho zoznamu
+        else if(akt->dalsi == NULL && strcasestr(akt->znacka,zauta)){    //Podmienka pre zmazanie posledneho zaznamu spajaneho zoznamu
             free(akt);
             (*z_prv) = NULL;
             pocet++;
@@ -207,7 +210,8 @@ int main(){
     while(1){
         scanf("%c",&c);
         if(c == 'n'){
-            f_N(&m_prv);    //Funkcia pre nacitanie prvkov z textoveho suboru do spajaneho zoznamu
+            if(f_N(&m_prv)==0)      //Funkcia pre nacitanie prvkov z textoveho suboru do spajaneho zoznamu
+                continue;
         }
         else if(c == 'v'){
             f_V(m_prv);     //Funkcia pre vypis spajaneho zoznamu
