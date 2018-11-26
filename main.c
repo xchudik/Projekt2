@@ -23,7 +23,7 @@ typedef struct autobazar{
 int f_N(AUTOBAZAR **n_prv){
     int pzaznam = 0,i=0;
     AUTOBAZAR *n_akt = NULL;
-    char pomocna[2];
+    char pomocna[4];
     FILE *subor;
     if((subor = fopen("auta.txt","r")) == NULL){
         printf("Zaznamy neboli nacitane\n");
@@ -31,7 +31,7 @@ int f_N(AUTOBAZAR **n_prv){
     }
     subor = fopen("auta.txt","r");
     while(!feof(subor)){
-        fgets(pomocna,2,subor);
+        fgets(pomocna,4,subor);
         if(pomocna[0] == '$')
             pzaznam++;
     }
@@ -45,7 +45,7 @@ int f_N(AUTOBAZAR **n_prv){
         (*n_prv) = NULL;
     }
     (*n_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
-    fgets(pomocna,2,subor);    //Nacitanie znaku '$' do pomocnej premennej
+    fgets(pomocna,4,subor);    //Nacitanie znaku '$' do pomocnej premennej
     fscanf(subor," %[^\n]s",(*n_prv)->kategoria);   //Nacitanie prveho zaznamu
     fscanf(subor," %[^\n]s",(*n_prv)->znacka);
     fscanf(subor," %[^\n]s",(*n_prv)->predajca);
@@ -57,8 +57,8 @@ int f_N(AUTOBAZAR **n_prv){
     for(i=0;i<pzaznam-1;i++){   //Cyklus pre nacitanie dalsich zaznamov
         n_akt->dalsi = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         n_akt = n_akt->dalsi;
-        fgets(pomocna,2,subor);     //Nacitanie znaku '$' do pomocnej premennej
-        fgets(pomocna,2,subor);
+        fgets(pomocna,4,subor);     //Nacitanie znaku '$' do pomocnej premennej
+        fgets(pomocna,4,subor);
         fscanf(subor," %[^\n]s",n_akt->kategoria);
         fscanf(subor," %[^\n]s",n_akt->znacka);
         fscanf(subor," %[^\n]s",n_akt->predajca);
@@ -102,7 +102,7 @@ void f_P(AUTOBAZAR **p_prv){
         }
         else
             while(p_akt != NULL){      //Pridavanie noveho zaznamu iny ako prvy
-                if(posun == k || p_akt->dalsi == NULL){
+                if(posun+1 == k || p_akt->dalsi == NULL){
                     p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
                     p_novy->dalsi = p_akt->dalsi;
                     p_akt->dalsi = p_novy;
@@ -113,12 +113,24 @@ void f_P(AUTOBAZAR **p_prv){
                     p_akt = p_akt->dalsi;
                 posun++;
             }
-    scanf(" %[^\n]s",p_akt->kategoria);
-    scanf(" %[^\n]s",p_akt->znacka);
-    scanf(" %[^\n]s",p_akt->predajca);
-    scanf(" %d",&p_akt->cena);
-    scanf(" %d",&p_akt->rok_vyroby);
-    scanf(" %[^\n]s",p_akt->stav_vozidla);
+    if((*p_prv) == NULL){
+        (*p_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
+        scanf(" %[^\n]s",(*p_prv)->kategoria);
+        scanf(" %[^\n]s",(*p_prv)->znacka);
+        scanf(" %[^\n]s",(*p_prv)->predajca);
+        scanf(" %d",&(*p_prv)->cena);
+        scanf(" %d",&(*p_prv)->rok_vyroby);
+        scanf(" %[^\n]s",(*p_prv)->stav_vozidla);
+        (*p_prv)->dalsi = NULL;
+    }
+    else{
+        scanf(" %[^\n]s",p_akt->kategoria);
+        scanf(" %[^\n]s",p_akt->znacka);
+        scanf(" %[^\n]s",p_akt->predajca);
+        scanf(" %d",&p_akt->cena);
+        scanf(" %d",&p_akt->rok_vyroby);
+        scanf(" %[^\n]s",p_akt->stav_vozidla);
+    }
 }
 
 void f_Z(AUTOBAZAR **z_prv){
@@ -128,7 +140,7 @@ void f_Z(AUTOBAZAR **z_prv){
     char zauta[50];
     scanf(" %s",zauta);
     while(akt != NULL){
-        if(akt->dalsi != NULL && strcasestr(akt->znacka,zauta) && akt == (*z_prv)){ //Podmienka pre zmazanie prveho prvku spajaneho zoznamu
+        if(strcasestr(akt->znacka,zauta) && akt == (*z_prv)){ //Podmienka pre zmazanie prveho prvku spajaneho zoznamu
             (*z_prv) = (*z_prv)->dalsi;
             free(akt);
             akt = (*z_prv);
@@ -141,11 +153,6 @@ void f_Z(AUTOBAZAR **z_prv){
             free(temp);
             pocet++;
             continue;
-        }
-        else if(akt->dalsi == NULL && strcasestr(akt->znacka,zauta)){    //Podmienka pre zmazanie posledneho zaznamu spajaneho zoznamu
-            free(akt);
-            (*z_prv) = NULL;
-            pocet++;
         }
         akt = akt->dalsi;
     }
