@@ -45,7 +45,7 @@ int f_N(AUTOBAZAR **n_prv){
         (*n_prv) = NULL;
     }
     (*n_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
-    fgets(pomocna,4,subor);    //Nacitanie znaku '$' do pomocnej premennej
+    fscanf(subor,"%s",pomocna);                  //Nacitanie znaku '$' do pomocnej premennej
     fscanf(subor," %[^\n]s",(*n_prv)->kategoria);   //Nacitanie prveho zaznamu
     fscanf(subor," %[^\n]s",(*n_prv)->znacka);
     fscanf(subor," %[^\n]s",(*n_prv)->predajca);
@@ -57,8 +57,7 @@ int f_N(AUTOBAZAR **n_prv){
     for(i=0;i<pzaznam-1;i++){   //Cyklus pre nacitanie dalsich zaznamov
         n_akt->dalsi = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         n_akt = n_akt->dalsi;
-        fgets(pomocna,4,subor);     //Nacitanie znaku '$' do pomocnej premennej
-        fgets(pomocna,4,subor);
+        fscanf(subor,"%s",pomocna);     //Nacitanie znaku '$' do pomocnej premennej
         fscanf(subor," %[^\n]s",n_akt->kategoria);
         fscanf(subor," %[^\n]s",n_akt->znacka);
         fscanf(subor," %[^\n]s",n_akt->predajca);
@@ -67,9 +66,12 @@ int f_N(AUTOBAZAR **n_prv){
         fscanf(subor," %[^\n]s",n_akt->stav_vozidla);
     }
     n_akt->dalsi = NULL; //Ukoncenie spajaneho zaznamu
-    if((*n_prv) == NULL)
+    if(pzaznam == 0){
         printf("Zaznamy neboli nacitane\n");
-    printf("Nacitalo sa %d zaznamov\n",pzaznam);
+        (*n_prv) = NULL;
+    }
+    else
+        printf("Nacitalo sa %d zaznamov\n",pzaznam);
     fclose(subor);
     return 1;
 }
@@ -147,7 +149,7 @@ void f_Z(AUTOBAZAR **z_prv){
             pocet++;
             continue;
         }
-        else if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){ //Podmienka pre zmazavanie zaznamov (okrem prveho a posledneho zaznamu)
+        else if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){ //Podmienka pre zmazavanie zaznamov (okrem prveho)
             temp = akt->dalsi;
             akt->dalsi = akt->dalsi->dalsi;
             free(temp);
@@ -213,7 +215,7 @@ void f_K(AUTOBAZAR **k_prv){
 
 int main(){
     char c;
-    AUTOBAZAR *m_prv=NULL;   //Smernik na zaciatok spajaneho zoznamu
+    AUTOBAZAR *m_prv=NULL;
     while(1){
         scanf("%c",&c);
         if(c == 'n'){
