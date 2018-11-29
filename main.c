@@ -117,22 +117,15 @@ void f_P(AUTOBAZAR **p_prv){
             }
     if((*p_prv) == NULL){
         (*p_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
-        scanf(" %[^\n]s",(*p_prv)->kategoria);
-        scanf(" %[^\n]s",(*p_prv)->znacka);
-        scanf(" %[^\n]s",(*p_prv)->predajca);
-        scanf("%d",&(*p_prv)->cena);
-        scanf("%d",&(*p_prv)->rok_vyroby);
-        scanf(" %[^\n]s",(*p_prv)->stav_vozidla);
         (*p_prv)->dalsi = NULL;
+        p_akt = (*p_prv);
     }
-    else{
         scanf(" %[^\n]s",p_akt->kategoria);
         scanf(" %[^\n]s",p_akt->znacka);
         scanf(" %[^\n]s",p_akt->predajca);
         scanf("%d",&p_akt->cena);
         scanf("%d",&p_akt->rok_vyroby);
         scanf(" %[^\n]s",p_akt->stav_vozidla);
-    }
 }
 
 void f_Z(AUTOBAZAR **z_prv){
