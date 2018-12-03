@@ -20,6 +20,15 @@ typedef struct autobazar{
     struct autobazar *dalsi;
 }AUTOBAZAR;
 
+void nacitanie(AUTOBAZAR *akt,FILE *subor){
+    fscanf(subor," %[^\n]s",akt->kategoria);
+    fscanf(subor," %[^\n]s",akt->znacka);
+    fscanf(subor," %[^\n]s",akt->predajca);
+    fscanf(subor," %d",&akt->cena);
+    fscanf(subor," %d",&akt->rok_vyroby);
+    fscanf(subor," %[^\n]s",akt->stav_vozidla);
+}
+
 int f_N(AUTOBAZAR **n_prv){
     int pzaznam = 0,i=0;
     AUTOBAZAR *n_akt = NULL;
@@ -46,42 +55,36 @@ int f_N(AUTOBAZAR **n_prv){
     }
     (*n_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
     fscanf(subor," %s",pomocna);
-    fscanf(subor," %[^\n]s",(*n_prv)->kategoria);
-    fscanf(subor," %[^\n]s",(*n_prv)->znacka);
-    fscanf(subor," %[^\n]s",(*n_prv)->predajca);
-    fscanf(subor," %d",&(*n_prv)->cena);
-    fscanf(subor," %d",&(*n_prv)->rok_vyroby);
-    fscanf(subor," %[^\n]s",(*n_prv)->stav_vozidla);
-    
+    nacitanie((*n_prv),subor);
     n_akt = (*n_prv);
     for(i=0;i<pzaznam-1;i++){
         n_akt->dalsi = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         n_akt = n_akt->dalsi;
         fscanf(subor," %s",pomocna);
-        fscanf(subor," %[^\n]s",n_akt->kategoria);
-        fscanf(subor," %[^\n]s",n_akt->znacka);
-        fscanf(subor," %[^\n]s",n_akt->predajca);
-        fscanf(subor," %d",&n_akt->cena);
-        fscanf(subor," %d",&n_akt->rok_vyroby);
-        fscanf(subor," %[^\n]s",n_akt->stav_vozidla);
+        nacitanie(n_akt,subor);
     }
     n_akt->dalsi = NULL;
     printf("Nacitalo sa %d zaznamov\n",pzaznam);
     fclose(subor);
     return 1;
 }
+
+void vypis(AUTOBAZAR *akt){
+    printf("kategoria: %s \n",akt->kategoria);
+    printf("znacka: %s \n",akt->znacka);
+    printf("predajca: %s \n",akt->predajca);
+    printf("cena: %d \n",akt->cena);
+    printf("rok_vyroby: %d \n",akt->rok_vyroby);
+    printf("stav_vozidla: %s \n",akt->stav_vozidla);
+}
+
 void f_V(AUTOBAZAR *v_prv){
     int poradie=1;
     AUTOBAZAR *v_akt;
     v_akt = v_prv;
     while(v_akt != NULL){
         printf("%d. \n",poradie);
-        printf("kategoria: %s \n",v_akt->kategoria);
-        printf("znacka: %s \n",v_akt->znacka);
-        printf("predajca: %s \n",v_akt->predajca);
-        printf("cena: %d \n",v_akt->cena);
-        printf("rok_vyroby: %d \n",v_akt->rok_vyroby);
-        printf("stav_vozidla: %s \n",v_akt->stav_vozidla);
+        vypis(v_akt);
         v_akt = v_akt->dalsi;
         poradie++;
     }
@@ -159,12 +162,7 @@ void f_H(AUTOBAZAR *h_prv){
     while(akt != NULL){
         if(!strcasecmp(akt->znacka,zauta) && akt->cena <= ponuka){
             printf("%d. \n",poradie);
-            printf("kategoria: %s \n",akt->kategoria);
-            printf("znacka: %s \n",akt->znacka);
-            printf("predajca: %s \n",akt->predajca);
-            printf("cena: %d \n",akt->cena);
-            printf("rok_vyroby: %d \n",akt->rok_vyroby);
-            printf("stav_vozidla: %s \n",akt->stav_vozidla);
+            vypis(akt);
             poradie++;
         }
         akt = akt->dalsi;
@@ -202,30 +200,30 @@ void f_K(AUTOBAZAR **k_prv){
 }
 
 int main(){
-    char c;
+    char funkcia;
     AUTOBAZAR *m_prv=NULL;
     while(1){
-        scanf("%c",&c);
-        if(c == 'n'){
+        scanf("%c",&funkcia);
+        if(funkcia == 'n'){
             if(f_N(&m_prv)==0)
                 continue;
         }
-        else if(c == 'v'){
+        else if(funkcia == 'v'){
             f_V(m_prv);
         }
-        else if(c == 'p'){
+        else if(funkcia == 'p'){
             f_P(&m_prv);
         }
-        else if(c == 'z'){
+        else if(funkcia == 'z'){
             f_Z(&m_prv);
         }
-        else if(c == 'h'){
+        else if(funkcia == 'h'){
             f_H(m_prv);
         }
-        else if(c == 'a'){
+        else if(funkcia == 'a'){
             f_A(&m_prv);
         }
-        else if(c == 'k'){
+        else if(funkcia == 'k'){
             f_K(&m_prv);
             break;
         }
