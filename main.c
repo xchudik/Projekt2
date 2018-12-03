@@ -20,6 +20,15 @@ typedef struct autobazar{
     struct autobazar *dalsi;
 }AUTOBAZAR;
 
+void nacitanie(AUTOBAZAR *akt,FILE *subor){
+    fscanf(subor," %[^\n]s",akt->kategoria);
+    fscanf(subor," %[^\n]s",akt->znacka);
+    fscanf(subor," %[^\n]s",akt->predajca);
+    fscanf(subor," %d",&akt->cena);
+    fscanf(subor," %d",&akt->rok_vyroby);
+    fscanf(subor," %[^\n]s",akt->stav_vozidla);
+}
+
 int f_N(AUTOBAZAR **n_prv){
     int pzaznam = 0,i=0;
     AUTOBAZAR *n_akt = NULL;
@@ -46,24 +55,13 @@ int f_N(AUTOBAZAR **n_prv){
     }
     (*n_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
     fscanf(subor," %s",pomocna);
-    fscanf(subor," %[^\n]s",(*n_prv)->kategoria);
-    fscanf(subor," %[^\n]s",(*n_prv)->znacka);
-    fscanf(subor," %[^\n]s",(*n_prv)->predajca);
-    fscanf(subor," %d",&(*n_prv)->cena);
-    fscanf(subor," %d",&(*n_prv)->rok_vyroby);
-    fscanf(subor," %[^\n]s",(*n_prv)->stav_vozidla);
-    
+    nacitanie((*n_prv),subor);
     n_akt = (*n_prv);
     for(i=0;i<pzaznam-1;i++){
         n_akt->dalsi = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         n_akt = n_akt->dalsi;
         fscanf(subor," %s",pomocna);
-        fscanf(subor," %[^\n]s",n_akt->kategoria);
-        fscanf(subor," %[^\n]s",n_akt->znacka);
-        fscanf(subor," %[^\n]s",n_akt->predajca);
-        fscanf(subor," %d",&n_akt->cena);
-        fscanf(subor," %d",&n_akt->rok_vyroby);
-        fscanf(subor," %[^\n]s",n_akt->stav_vozidla);
+        nacitanie(n_akt,subor);
     }
     n_akt->dalsi = NULL;
     printf("Nacitalo sa %d zaznamov\n",pzaznam);
