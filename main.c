@@ -11,12 +11,12 @@
 #include <string.h>
 
 typedef struct autobazar{
-    char kategoria[50];
-    char znacka[50];
-    char predajca[100];
+    char kategoria[51];
+    char znacka[51];
+    char predajca[101];
     int cena;
     int rok_vyroby;
-    char stav_vozidla[200];
+    char stav_vozidla[201];
     struct autobazar *dalsi;
 }AUTOBAZAR;
 
@@ -26,7 +26,7 @@ int f_N(AUTOBAZAR **n_prv){
     char pomocna[2];
     FILE *subor;
     if((subor = fopen("auta.txt","r")) == NULL){
-        printf("Zaznamy neboli nacitane\n");
+        printf("Zaznamy neboli nacitane \n");
         return 0;
     }
     subor = fopen("auta.txt","r");
@@ -92,30 +92,30 @@ void f_V(AUTOBAZAR *v_prv){
     }
 }
 void f_P(AUTOBAZAR **p_prv){
-    int k,posun=1;
+    int pozicia,posun=1;
     AUTOBAZAR *p_novy,*p_akt;
     p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
     p_akt = (*p_prv);
-    scanf("%d",&k);
-        if(k==1 && (*p_prv) != NULL){   //Pridanie noveho zaznamu ako prvy
-            p_novy->dalsi=(*p_prv);
-            (*p_prv) = p_novy;
-            p_akt = (*p_prv);
-        }
-        else
-            while(p_akt != NULL){      //Pridavanie noveho zaznamu iny ako prvy
-                if(posun+1 == k || p_akt->dalsi == NULL){
-                    p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
-                    p_novy->dalsi = p_akt->dalsi;
-                    p_akt->dalsi = p_novy;
-                    p_akt = p_novy;
-                    break;
-                }
-                else
-                    p_akt = p_akt->dalsi;
-                posun++;
+    scanf("%d",&pozicia);
+    if(pozicia==1 && (*p_prv) != NULL){   //Pridanie noveho zaznamu ako prvy
+        p_novy->dalsi=(*p_prv);
+        (*p_prv) = p_novy;
+        p_akt = (*p_prv);
+    }
+    else
+        while(p_akt != NULL){      //Pridavanie noveho zaznamu iny ako prvy
+            if(posun+1 == pozicia || p_akt->dalsi == NULL){
+                p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
+                p_novy->dalsi = p_akt->dalsi;
+                p_akt->dalsi = p_novy;
+                p_akt = p_novy;
+                break;
             }
-    if((*p_prv) == NULL){
+            else
+                p_akt = p_akt->dalsi;
+            posun++;
+        }
+    if((*p_prv) == NULL){   //Ak je spajany zoznam prazdny nacita 1 zaznam
         (*p_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         (*p_prv)->dalsi = NULL;
         p_akt = (*p_prv);
@@ -132,7 +132,7 @@ void f_Z(AUTOBAZAR **z_prv){
     int pocet = 0;
     AUTOBAZAR *akt,*temp;
     akt = (*z_prv);
-    char zauta[50];
+    char zauta[51];
     scanf(" %s",zauta);
     while(akt != NULL){
         if(strcasestr(akt->znacka,zauta) && akt == (*z_prv)){ //Podmienka pre zmazanie prveho prvku spajaneho zoznamu
@@ -156,25 +156,25 @@ void f_Z(AUTOBAZAR **z_prv){
 
 void f_H(AUTOBAZAR *h_prv){
     char zauta[50];
-    int ponuka,i=1;
+    int ponuka,poradie=1;
     AUTOBAZAR *akt;
     akt = h_prv;
     scanf(" %[^\n]s",zauta);
     scanf("%d",&ponuka);
     while(akt != NULL){
         if(!strcasecmp(akt->znacka,zauta) && akt->cena <= ponuka){
-            printf("%d. \n",i);
+            printf("%d. \n",poradie);
             printf("kategoria: %s \n",akt->kategoria);
             printf("znacka: %s \n",akt->znacka);
             printf("predajca: %s \n",akt->predajca);
             printf("cena: %d \n",akt->cena);
             printf("rok_vyroby: %d \n",akt->rok_vyroby);
             printf("stav_vozidla: %s \n",akt->stav_vozidla);
-            i++;
+            poradie++;
         }
         akt = akt->dalsi;
     }
-    if(i == 1)
+    if(poradie == 1)
         printf("V ponuke nie su pozadovane auta \n");
 }
 
