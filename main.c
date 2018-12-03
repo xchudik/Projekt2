@@ -70,18 +70,23 @@ int f_N(AUTOBAZAR **n_prv){
     fclose(subor);
     return 1;
 }
+
+void vypis(AUTOBAZAR *akt){
+    printf("kategoria: %s \n",akt->kategoria);
+    printf("znacka: %s \n",akt->znacka);
+    printf("predajca: %s \n",akt->predajca);
+    printf("cena: %d \n",akt->cena);
+    printf("rok_vyroby: %d \n",akt->rok_vyroby);
+    printf("stav_vozidla: %s \n",akt->stav_vozidla);
+}
+
 void f_V(AUTOBAZAR *v_prv){
     int poradie=1;
     AUTOBAZAR *v_akt;
     v_akt = v_prv;
     while(v_akt != NULL){
         printf("%d. \n",poradie);
-        printf("kategoria: %s \n",v_akt->kategoria);
-        printf("znacka: %s \n",v_akt->znacka);
-        printf("predajca: %s \n",v_akt->predajca);
-        printf("cena: %d \n",v_akt->cena);
-        printf("rok_vyroby: %d \n",v_akt->rok_vyroby);
-        printf("stav_vozidla: %s \n",v_akt->stav_vozidla);
+        vypis(v_akt);
         v_akt = v_akt->dalsi;
         poradie++;
     }
@@ -159,12 +164,7 @@ void f_H(AUTOBAZAR *h_prv){
     while(akt != NULL){
         if(!strcasecmp(akt->znacka,zauta) && akt->cena <= ponuka){
             printf("%d. \n",poradie);
-            printf("kategoria: %s \n",akt->kategoria);
-            printf("znacka: %s \n",akt->znacka);
-            printf("predajca: %s \n",akt->predajca);
-            printf("cena: %d \n",akt->cena);
-            printf("rok_vyroby: %d \n",akt->rok_vyroby);
-            printf("stav_vozidla: %s \n",akt->stav_vozidla);
+            vypis(akt);
             poradie++;
         }
         akt = akt->dalsi;
