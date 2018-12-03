@@ -23,7 +23,6 @@ DasWeltAuto Zlate Piesky Bratislava <br/>
 2018    <br/>
 najazdene do 15000 km   <br/>
 
-Commit "refarktoring funkcieN" - Keď som si uvedomil, že nebudem musieť použiť premennú FILE inde ako vo funkcii n. Upravil som kód zo smerníka na smerník z funkcie main na premennú funkcie n.
 
 
 
