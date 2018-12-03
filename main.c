@@ -200,30 +200,30 @@ void f_K(AUTOBAZAR **k_prv){
 }
 
 int main(){
-    char c;
+    char funkcia;
     AUTOBAZAR *m_prv=NULL;
     while(1){
-        scanf("%c",&c);
-        if(c == 'n'){
+        scanf("%c",&funkcia);
+        if(funkcia == 'n'){
             if(f_N(&m_prv)==0)
                 continue;
         }
-        else if(c == 'v'){
+        else if(funkcia == 'v'){
             f_V(m_prv);
         }
-        else if(c == 'p'){
+        else if(funkcia == 'p'){
             f_P(&m_prv);
         }
-        else if(c == 'z'){
+        else if(funkcia == 'z'){
             f_Z(&m_prv);
         }
-        else if(c == 'h'){
+        else if(funkcia == 'h'){
             f_H(m_prv);
         }
-        else if(c == 'a'){
+        else if(funkcia == 'a'){
             f_A(&m_prv);
         }
-        else if(c == 'k'){
+        else if(funkcia == 'k'){
             f_K(&m_prv);
             break;
         }
