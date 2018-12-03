@@ -36,7 +36,7 @@ int f_N(AUTOBAZAR **n_prv){
             pzaznam++;
     }
     rewind(subor);
-    if((*n_prv) != NULL){       //Ak bol uz nacitani spajany zoznam uvolni ho
+    if((*n_prv) != NULL){
         while(n_akt != NULL){
             n_akt = (*n_prv);
             (*n_prv)=(*n_prv)->dalsi;
@@ -45,8 +45,8 @@ int f_N(AUTOBAZAR **n_prv){
         (*n_prv) = NULL;
     }
     (*n_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
-    fscanf(subor," %s",pomocna);                  //Nacitanie znaku '$' do pomocnej premennej
-    fscanf(subor," %[^\n]s",(*n_prv)->kategoria);   //Nacitanie prveho zaznamu
+    fscanf(subor," %s",pomocna);
+    fscanf(subor," %[^\n]s",(*n_prv)->kategoria);
     fscanf(subor," %[^\n]s",(*n_prv)->znacka);
     fscanf(subor," %[^\n]s",(*n_prv)->predajca);
     fscanf(subor," %d",&(*n_prv)->cena);
@@ -54,10 +54,10 @@ int f_N(AUTOBAZAR **n_prv){
     fscanf(subor," %[^\n]s",(*n_prv)->stav_vozidla);
     
     n_akt = (*n_prv);
-    for(i=0;i<pzaznam-1;i++){   //Cyklus pre nacitanie dalsich zaznamov
+    for(i=0;i<pzaznam-1;i++){
         n_akt->dalsi = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         n_akt = n_akt->dalsi;
-        fscanf(subor," %s",pomocna);     //Nacitanie znaku '$' do pomocnej premennej
+        fscanf(subor," %s",pomocna);
         fscanf(subor," %[^\n]s",n_akt->kategoria);
         fscanf(subor," %[^\n]s",n_akt->znacka);
         fscanf(subor," %[^\n]s",n_akt->predajca);
@@ -65,7 +65,7 @@ int f_N(AUTOBAZAR **n_prv){
         fscanf(subor," %d",&n_akt->rok_vyroby);
         fscanf(subor," %[^\n]s",n_akt->stav_vozidla);
     }
-    n_akt->dalsi = NULL; //Ukoncenie spajaneho zaznamu
+    n_akt->dalsi = NULL;
     printf("Nacitalo sa %d zaznamov\n",pzaznam);
     fclose(subor);
     return 1;
@@ -92,13 +92,13 @@ void f_P(AUTOBAZAR **p_prv){
     p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
     p_akt = (*p_prv);
     scanf("%d",&pozicia);
-    if(pozicia==1 && (*p_prv) != NULL){   //Pridanie noveho zaznamu ako prvy
+    if(pozicia==1 && (*p_prv) != NULL){
         p_novy->dalsi=(*p_prv);
         (*p_prv) = p_novy;
         p_akt = (*p_prv);
     }
     else
-        while(p_akt != NULL){      //Pridavanie noveho zaznamu iny ako prvy
+        while(p_akt != NULL){
             if(posun+1 == pozicia || p_akt->dalsi == NULL){
                 p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
                 p_novy->dalsi = p_akt->dalsi;
@@ -110,7 +110,7 @@ void f_P(AUTOBAZAR **p_prv){
                 p_akt = p_akt->dalsi;
             posun++;
         }
-    if((*p_prv) == NULL){   //Ak je spajany zoznam prazdny nacita 1 zaznam
+    if((*p_prv) == NULL){
         (*p_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         (*p_prv)->dalsi = NULL;
         p_akt = (*p_prv);
@@ -130,14 +130,14 @@ void f_Z(AUTOBAZAR **z_prv){
     char zauta[51];
     scanf(" %s",zauta);
     while(akt != NULL){
-        if(strcasestr(akt->znacka,zauta) && akt == (*z_prv)){ //Podmienka pre zmazanie prveho prvku spajaneho zoznamu
+        if(strcasestr(akt->znacka,zauta) && akt == (*z_prv)){
             (*z_prv) = (*z_prv)->dalsi;
             free(akt);
             akt = (*z_prv);
             pocet++;
             continue;
         }
-        else if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){ //Podmienka pre zmazavanie zaznamov (okrem prveho)
+        else if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){
             temp = akt->dalsi;
             akt->dalsi = akt->dalsi->dalsi;
             free(temp);
@@ -207,26 +207,26 @@ int main(){
     while(1){
         scanf("%c",&c);
         if(c == 'n'){
-            if(f_N(&m_prv)==0)      //Funkcia pre nacitanie prvkov z textoveho suboru do spajaneho zoznamu
+            if(f_N(&m_prv)==0)
                 continue;
         }
         else if(c == 'v'){
-            f_V(m_prv);     //Funkcia pre vypis spajaneho zoznamu
+            f_V(m_prv);
         }
         else if(c == 'p'){
-            f_P(&m_prv);    //Funkcia pre pridanie zaznamu do spajaheno zoznamu
+            f_P(&m_prv);
         }
         else if(c == 'z'){
-            f_Z(&m_prv);    //Funkcia pre zmazavanie zaznamov zo spajaneho zoznamu podla znacky
+            f_Z(&m_prv);
         }
         else if(c == 'h'){
-            f_H(m_prv);     //Funkcia pre vyhladanie ponuky podla znacky a ceny
+            f_H(m_prv);
         }
         else if(c == 'a'){
-            f_A(&m_prv);    //Funkcia pre znizenie ceny o 100 pre zadanu znacku a rok vyroby
+            f_A(&m_prv);
         }
         else if(c == 'k'){
-            f_K(&m_prv);    //Funckia pre uvolnenie spajaneho zoznamu a zavretie programu
+            f_K(&m_prv);
             break;
         }
     }
