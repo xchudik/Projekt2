@@ -66,12 +66,7 @@ int f_N(AUTOBAZAR **n_prv){
         fscanf(subor," %[^\n]s",n_akt->stav_vozidla);
     }
     n_akt->dalsi = NULL; //Ukoncenie spajaneho zaznamu
-    if(pzaznam == 0){
-        printf("Zaznamy neboli nacitane\n");
-        (*n_prv) = NULL;
-    }
-    else
-        printf("Nacitalo sa %d zaznamov\n",pzaznam);
+    printf("Nacitalo sa %d zaznamov\n",pzaznam);
     fclose(subor);
     return 1;
 }
@@ -155,7 +150,7 @@ void f_Z(AUTOBAZAR **z_prv){
 }
 
 void f_H(AUTOBAZAR *h_prv){
-    char zauta[50];
+    char zauta[51];
     int ponuka,poradie=1;
     AUTOBAZAR *akt;
     akt = h_prv;
@@ -179,7 +174,7 @@ void f_H(AUTOBAZAR *h_prv){
 }
 
 void f_A(AUTOBAZAR **a_prv){
-    char zauta[50];
+    char zauta[51];
     int rok,pocet=0;
     AUTOBAZAR *akt;
     akt=(*a_prv);
