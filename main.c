@@ -19,7 +19,6 @@ typedef struct autobazar{
     char stav_vozidla[201];
     struct autobazar *dalsi;
 }AUTOBAZAR;
-
 void nacitanie(AUTOBAZAR *akt,FILE *subor){
     fscanf(subor," %[^\n]s",akt->kategoria);
     fscanf(subor," %[^\n]s",akt->znacka);
