@@ -19,7 +19,6 @@ typedef struct autobazar{
     char stav_vozidla[201];
     struct autobazar *dalsi;
 }AUTOBAZAR;
-
 void nacitanie(AUTOBAZAR *akt,FILE *subor){
     fscanf(subor," %[^\n]s",akt->kategoria);
     fscanf(subor," %[^\n]s",akt->znacka);
@@ -28,7 +27,6 @@ void nacitanie(AUTOBAZAR *akt,FILE *subor){
     fscanf(subor," %d",&akt->rok_vyroby);
     fscanf(subor," %[^\n]s",akt->stav_vozidla);
 }
-
 int f_N(AUTOBAZAR **n_prv){
     int pzaznam = 0,i=0;
     AUTOBAZAR *n_akt = NULL;
@@ -68,7 +66,6 @@ int f_N(AUTOBAZAR **n_prv){
     fclose(subor);
     return 1;
 }
-
 void vypis(AUTOBAZAR *akt){
     printf("kategoria: %s \n",akt->kategoria);
     printf("znacka: %s \n",akt->znacka);
@@ -77,7 +74,6 @@ void vypis(AUTOBAZAR *akt){
     printf("rok_vyroby: %d \n",akt->rok_vyroby);
     printf("stav_vozidla: %s \n",akt->stav_vozidla);
 }
-
 void f_V(AUTOBAZAR *v_prv){
     int poradie=1;
     AUTOBAZAR *v_akt;
@@ -125,7 +121,6 @@ void f_P(AUTOBAZAR **p_prv){
         scanf("%d",&p_akt->rok_vyroby);
         scanf(" %[^\n]s",p_akt->stav_vozidla);
 }
-
 void f_Z(AUTOBAZAR **z_prv){
     int pocet = 0;
     AUTOBAZAR *akt,*temp;
@@ -151,7 +146,6 @@ void f_Z(AUTOBAZAR **z_prv){
     }
     printf("Vymazalo sa %d zaznamov \n",pocet);
 }
-
 void f_H(AUTOBAZAR *h_prv){
     char zauta[51];
     int ponuka,poradie=1;
@@ -170,7 +164,6 @@ void f_H(AUTOBAZAR *h_prv){
     if(poradie == 1)
         printf("V ponuke nie su pozadovane auta \n");
 }
-
 void f_A(AUTOBAZAR **a_prv){
     char zauta[51];
     int rok,pocet=0;
@@ -198,7 +191,6 @@ void f_K(AUTOBAZAR **k_prv){
     }
     (*k_prv) = NULL;
 }
-
 int main(){
     char funkcia;
     AUTOBAZAR *m_prv=NULL;
