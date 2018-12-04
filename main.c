@@ -45,7 +45,7 @@ int f_N(AUTOBAZAR **n_prv){
             pzaznam++;
     }
     rewind(subor);
-    if((*n_prv) != NULL){
+    if((*n_prv) != NULL){       //Ak bol uz nacitani spajany zoznam uvolni ho
         while(n_akt != NULL){
             n_akt = (*n_prv);
             (*n_prv)=(*n_prv)->dalsi;
@@ -55,15 +55,15 @@ int f_N(AUTOBAZAR **n_prv){
     }
     (*n_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
     fscanf(subor," %s",pomocna);
-    nacitanie((*n_prv),subor);
+    nacitanie((*n_prv),subor);      //Nacitanie prveho zaznamu
     n_akt = (*n_prv);
     for(i=0;i<pzaznam-1;i++){
         n_akt->dalsi = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         n_akt = n_akt->dalsi;
-        fscanf(subor," %s",pomocna);
+        fscanf(subor," %s",pomocna);    //Nacitanie znaku '$' do pomocnej premennej
         nacitanie(n_akt,subor);
     }
-    n_akt->dalsi = NULL;
+    n_akt->dalsi = NULL;        //Ukoncenie spajaneho zaznamu
     printf("Nacitalo sa %d zaznamov\n",pzaznam);
     fclose(subor);
     return 1;
@@ -95,13 +95,13 @@ void f_P(AUTOBAZAR **p_prv){
     p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
     p_akt = (*p_prv);
     scanf("%d",&pozicia);
-    if(pozicia==1 && (*p_prv) != NULL){
+    if(pozicia==1 && (*p_prv) != NULL){     //Pridanie noveho zaznamu ako prvy
         p_novy->dalsi=(*p_prv);
         (*p_prv) = p_novy;
         p_akt = (*p_prv);
     }
     else
-        while(p_akt != NULL){
+        while(p_akt != NULL){       //Pridavanie noveho zaznamu iny ako prvy
             if(posun+1 == pozicia || p_akt->dalsi == NULL){
                 p_novy = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
                 p_novy->dalsi = p_akt->dalsi;
@@ -113,7 +113,7 @@ void f_P(AUTOBAZAR **p_prv){
                 p_akt = p_akt->dalsi;
             posun++;
         }
-    if((*p_prv) == NULL){
+    if((*p_prv) == NULL){       //Ak je spajany zoznam prazdny nacita 1 zaznam
         (*p_prv) = (AUTOBAZAR*) malloc(sizeof(AUTOBAZAR));
         (*p_prv)->dalsi = NULL;
         p_akt = (*p_prv);
@@ -133,14 +133,14 @@ void f_Z(AUTOBAZAR **z_prv){
     char zauta[51];
     scanf(" %s",zauta);
     while(akt != NULL){
-        if(strcasestr(akt->znacka,zauta) && akt == (*z_prv)){
+        if(strcasestr(akt->znacka,zauta) && akt == (*z_prv)){       //Podmienka pre zmazanie prveho prvku spajaneho zoznamu
             (*z_prv) = (*z_prv)->dalsi;
             free(akt);
             akt = (*z_prv);
             pocet++;
             continue;
         }
-        else if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){
+        else if(akt->dalsi != NULL && strcasestr(akt->dalsi->znacka,zauta)){    //Podmienka pre zmazavanie zaznamov (okrem prveho)
             temp = akt->dalsi;
             akt->dalsi = akt->dalsi->dalsi;
             free(temp);
@@ -205,26 +205,26 @@ int main(){
     while(1){
         scanf("%c",&funkcia);
         if(funkcia == 'n'){
-            if(f_N(&m_prv)==0)
+            if(f_N(&m_prv)==0)      //Funkcia pre nacitanie prvkov z textoveho suboru do spajaneho zoznamu
                 continue;
         }
         else if(funkcia == 'v'){
-            f_V(m_prv);
+            f_V(m_prv);             //Funkcia pre vypis spajaneho zoznamu
         }
         else if(funkcia == 'p'){
-            f_P(&m_prv);
+            f_P(&m_prv);            //Funkcia pre pridanie zaznamu do spajaheno zoznamu
         }
         else if(funkcia == 'z'){
-            f_Z(&m_prv);
+            f_Z(&m_prv);            //Funkcia pre zmazavanie zaznamov zo spajaneho zoznamu podla znacky
         }
         else if(funkcia == 'h'){
-            f_H(m_prv);
+            f_H(m_prv);            //Funkcia pre vyhladanie ponuky podla znacky a ceny
         }
         else if(funkcia == 'a'){
-            f_A(&m_prv);
+            f_A(&m_prv);            //Funkcia pre znizenie ceny o 100 pre zadanu znacku a rok vyroby
         }
         else if(funkcia == 'k'){
-            f_K(&m_prv);
+            f_K(&m_prv);            //Funckia pre uvolnenie spajaneho zoznamu a zavretie programu
             break;
         }
     }
